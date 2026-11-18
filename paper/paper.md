@@ -8,32 +8,27 @@ tags:
   - slave spin mean field method
 authors:
   - name: Youssra. Anene
-    #orcid: 0000-0000-0000-0000
-    corresponding: true 
+    orcid: 'https://orcid.org/0009-0008-3622-9196'
     #equal-contrib: true
+    corresponding: true 
     affiliation: "1" # (Multiple affiliations must be quoted)
   - name: José M. Pizarro
     orcid: 'https://orcid.org/0000-0002-6751-8192'
-    #equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
     affiliation: 2
   - name: Lorenzo. Fratino
     orcid: 'https://orcid.org/0000-0003-1288-2859'
-    #corresponding: true # (This is how to denote the corresponding author)
-    affiliation: 1
+    affiliation: 1, 3
 affiliations:
- - name: LPTM, CY Cergy Paris University, France
+ - name: LPTM, CNRS UMR 8089, CY Cergy Paris University, France
    index: 1
-   #ror: 00hx57361
- - name: 'Federal Institute for Materials Research and Testing (BAM), Germany'
+ - name: Federal Institute for Materials Research and Testing (BAM), Germany
    index: 2
+ - name: Lille University, CNRS Centrale Lille, Université Polytechnique Hauts de France, Junia-ISEN,UMR 8520, IEMN, France
+   index: 3 
 date: 21 May 2026
 bibliography: paper.bib
 #csl: ieee.csl
 
-# Optional fields if submitting to a AAS journal too, see this blog post:
-# https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
-#aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
-#aas-journal: Astrophysical Journal <- The name of the AAS journal.
 ---
 
 # Summary
@@ -41,96 +36,48 @@ bibliography: paper.bib
 
 # Statement of need
 
-Quantum materials such as high-temperature superconductors, Mott insulators, and heavy-fermion compounds exhibit electronic behaviors that conventional single-particle frameworks cannot adequately capture. The standard tight-binding approximation, though computationally convenient, neglects the electron-electron correlations that govern the physics of these systems. Obtaining renormalized band structures that faithfully encode many-body effects is therefore a fundamental requirement for realistic modeling. While methods like DFT+DMFT have proven powerful in this regard, their computational cost makes them poorly suited for high-throughput screening or broad exploratory studies across parameter space.
-Slave spin mean field (SSMF) theory offers a compelling middle ground: it captures essential correlation-driven phenomena, including Mott transitions and quasiparticle weight renormalization,  at a fraction of the cost of DMFT. Despite this practical appeal, the community currently lacks an open-source, standardized implementation of SSMF. Existing codes are largely confined to individual research groups, are rarely documented for general use, and are not structured to support systematic or reproducible calculations. This absence creates real barriers to validation, benchmarking, and methodological extension.
-`pySSMF` addresses this gap directly. It is a Python package that implements SSMF theory for the two-dimensional Hubbard model, supporting both single- and multi-orbital cases across paramagnetic and antiferromagnetic phases and a range of lattice geometries. The package is designed with efficient parameter scanning in mind, enabling rapid computation of quasiparticle weights across large regions of model space. By making this methodology openly available with a clean interface and reproducible workflows, SSMF lowers the barrier to entry for condensed matter physicists and adjacent researchers seeking to study strongly correlated electron systems without the overhead of more demanding many-body frameworks.
+Quantum materials such as high-temperature superconductors, Mott insulators, and heavy-fermion compounds exhibit behavior that single-particle tight-binding models cannot capture, because they neglect the electron-electron correlations that govern these systems. Realistic modeling therefore requires renormalized band structures that encode many-body effects. Methods such as DFT+DMFT provide these, but their computational cost makes them impractical for high-throughput screening or broad parameter-space exploration.
+Slave-spin mean-field (SSMF) theory [@de2005orbital;@georges2013strong;@de2017modeling;@crispino2023slave] offers an inexpensive alternative. It captures correlation-driven phenomena, including Mott transitions, quasiparticle weight renormalization, and magnetic order, at a fraction of the cost of DMFT. However, no open-source, standardized implementation exists. Existing codes are largely confined to individual research groups, poorly documented, and not designed for systematic or reproducible calculations, which hinders validation, benchmarking, and extension of the method.
+`pySSMF` fills this gap. It is a Python package implementing SSMF for the two-dimensional Hubbard model, supporting single- and multi-orbital systems, paramagnetic and antiferromagnetic phases, and multiple lattice geometries. Its interface is built for efficient parameter scans, enabling rapid computation of quasiparticle weights across large regions of model space. By providing a documented, reproducible implementation, `pySSMF` lets condensed matter physicists and adjacent researchers study strongly correlated systems without the overhead of full many-body frameworks.
+
+
 
 # State of the field    
 
-The study of strongly correlated electron systems is shaped by a persistent tension between accuracy and computational cost. While DMFT and its extensions, cluster DMFT, GW+EDMFT,  describe multiorbital Hubbard physics with high fidelity, their expense makes broad parameter exploration impractical for many groups. Recent progress in downfolding, low-energy effective models, and machine-learned mappings from exact diagonalization has shown that semiquantitative accuracy is achievable at substantially lower cost, pointing toward an emerging generation of lightweight, physically grounded correlation-aware solvers. SSMF theory sits naturally within this landscape. By mapping the electron occupation onto auxiliary spin degrees of freedom and treating interactions at the mean-field level, SSMF reproduces key signatures of correlated phases, including Mott transitions, and antiferromagnetic phases, while remaining computationally inexpensive enough for systematic studies. Benchmarks against DMFT have shown good agreement for quasiparticle weights and phase boundaries across a range of filling and interaction strengths, validating its use as a practical tool for exploring multiorbital two-dimensional Hubbard models in both paramagnetic and antiferromagnetic regimes.
-At the same time, the broader field of computational condensed matter physics has undergone a significant cultural shift toward open, reproducible software practices. Projects such as TRIQS have demonstrated the scientific value of modular, community-maintained frameworks: they lower barriers to entry, facilitate benchmarking across independent implementations, and extend the usable lifetime of scientific codes well beyond individual research projects. Despite this trend, no comparable open-source implementation of SSMF theory currently exists. Existing codes are overwhelmingly private, undocumented for external use, or tightly coupled to the workflows of specific groups, conditions that hinder reproducibility and make cross-study comparisons unreliable.
-`pySSMF` is designed to address this absence directly. By providing a documented, tested, and extensible Python implementation, complete with benchmark datasets, Jupyter notebook tutorials, and automated test suites, it brings slave-spin methodology into alignment with contemporary standards for open scientific software. The package is intended to serve both experienced researchers seeking a reliable tool for systematic exploration and students entering the field who need a well-structured codebase to learn from and build upon.
+Strongly correlated electron systems are usually studied with dynamical mean-field theory (DMFT) and its extensions, such as cluster DMFT and GW+EDMFT. These methods describe multiorbital Hubbard physics with high fidelity and are supported by mature open-source frameworks, including `TRIQS` [@TRIQS2015] and `w2dynamics` [@WALLERBERGER2019388]. Their computational cost, however, limits systematic exploration of parameter space. Downfolding and low-energy effective models reduce this cost, but they typically still rely on a DMFT solver at the final step.
+Slave-spin mean-field (SSMF) theory [@de2005orbital; @de2017modeling] is a lightweight alternative. It reproduces Mott transition and captures  Néel antiferromagnetic order at a fraction of the computational cost of DMFT[@crispino2023slave]. To our knowledge, no open-source implementation of SSMF exists. Published calculations rely on in-house codes that are not documented for external use, which makes results hard to reproduce and compare across studies.
+We therefore built `pySSMF` as a standalone package instead of extending an existing DMFT framework. DMFT maps the lattice problem onto a quantum impurity problem that requires a dedicated impurity solver, whereas SSMF treats the lattice problem directly through a mean-field decoupling of fermionic and slave-spin degrees of freedom. The two approaches therefore share little computational infrastructure.
+
 
 # Software design
-
-...
-
+## Theoretical background
+`pySSMF` solves the multi-orbital Hubbard model on a lattice,
+$$
+H = \sum_{ij,m,\sigma} t_{ij}\, d^{\dagger}_{im\sigma} d_{jm\sigma}- \mu \sum_{i,m,\sigma} n_{im\sigma} + H_{int},
+$$
+where $d_{im\sigma}^\dagger$ creates an electron at site $i$, orbital $m$, spin $\sigma$, and $H_{int}$ contains the intra- and inter-orbital Coulomb repulsions $U$ and $U'=U-2J$ and the Hund's coupling $J$. In the $Z_2$ slave-spin representation [@de2005orbital;@de2017modeling], each operator is written as 
+$d_{im\sigma} \rightarrow f_{im\sigma}\, O_{im\sigma}, \quad
+d^{\dagger}_{im\sigma} \rightarrow O^{\dagger}_{im\sigma} f^{\dagger}_{im\sigma}$, with an auxialliary fermion $f_{im\sigma}$ and a spin-1/2 operator $O_{im\sigma}$
+built from slave spins. The physical subspace is enforced by the constraint
+$$
+f^{\dagger}_{im\sigma} f_{im\sigma} = S^z_{im\sigma} + \frac{1}{2},
+$$
+A mean-field decoupling separates the problem into two sectors. The fermions move in a tight-binding model whose hopping is renormalized by slave-spin expectation values, which yields the quasiparticle weight $Z_{m\sigma}=\langle O_{im\sigma}\rangle^2$. The slave spins obey a single-site problem that is solved exaclty. The two sectors are iterated to self-consistency, and antiferromagnetic order is reached through a sublattice extension [@crispino2023slave]. This loop is the core of the package (see next subsection). # link to the full mathematical derivation!!!
+## Architecture and workflow
+Architecture + self-consistency loop + workflow image
 # Research impact statement
 
-Beyond its immediate utility, `pySSMF` is built to grow. The current implementation already goes further than most comparable tools by incorporating magnetic phases, including antiferromagnetic order, alongside the standard paramagnetic case, which meaningfully widens the range of physics one can study. Support for real materials beyond model Hamiltonians is a natural next step, and we plan to include this in a future release.
-The longer-term vision is more ambitious. A fast, systematic tool like this one is well-suited to high-throughput exploration: running calculations across large swaths of parameter or chemical space becomes practical in a way it simply isn't with DMFT. Done at scale, this could produce datasets of renormalized bands, quasiparticle weights, and effective masses that are otherwise hard to assemble cheaply. Those datasets, in turn, are exactly the kind of structured, physics-rich data that machine learning models, graph neural networks, transformers, can learn from effectively, potentially uncovering relationships between crystal structure, chemical composition, and correlated electronic behavior that are not obvious from theory alone. We believe this positions `pySSMF` as a useful building block in a broader computational pipeline aimed at accelerating the discovery of materials with targeted properties, whether that means unconventional superconductivity, large thermoelectric response, or switching behavior relevant to neuromorphic computing.
+`pySSMF` makes slave-spin mean-field calculations reproducible and openly available, and it supports both paramagnetic and antiferromagnetic phases. Its results have been validated against published slave-spin and DMFT results: it reproduces (specific quantities), e.g. the quasiparticle weight versus interaction strength and so we can extrat the critical interaction value where the Mott transition occurs, the interaction-dependence of the quasiparticle weight from [@de2005orbital] also of the double occupancy, also the energies and other quantities, and staggered magnetization for in the antiferromagnetic phase of [@crispino2023slave]. 
 
-# Mathematics
+To add also:
+ - Benchmark figures/ evidence:  distributed with the package as datasets and Jupyter notebook tutorials +  checked by an automated test suite --> users can verify the implementation and reproduce the figures independently
+ - package release on PyPI --> facilitate installation and distribution
+ - Archiving and citation: Zenodo --> DOI for reproducibility and citation
+ - URL Documentation
 
-The central model is the multi-orbital Hubbard Hamiltonian,
-
-$$
-H =
-\sum_{ij,m,\sigma} t_{ij}
-\left(
-d^{\dagger}_{im\sigma} d_{jm\sigma}
-+ \mathrm{h.c.}
-\right)
-- \mu \sum_{i,m,\sigma} n_{im\sigma}
-+ U \sum_{i,m} n_{im\uparrow} n_{im\downarrow}
-+ U' \sum_{i,m \neq m'} n_{im\uparrow} n_{im'\downarrow}
-+ (U' - J)
-\sum_{i,m < m',\sigma}
-n_{im\sigma} n_{im'\sigma}.
-$$
-
-where $$d^{\dagger}_{im\sigma}$$ ($$d_{im\sigma}$$) creates (annihilates) an electron at site $$i$$,
-orbital $$m$$, spin $$\sigma$$, and $$n_{im\sigma} = d^{\dagger}_{im\sigma} d_{im\sigma}$$.
-The chemical potential $$\mu$$ controls the filling, $$U$$ and $$U'$$ are the intra- and
-inter-orbital Coulomb repulsions, and $$J$$ is Hund's coupling. We adopt the
-rotationally invariant relation $$U' = U - 2J$$ throughout. Here it is with zero crystal field splitting. 
-
-## Slave-spin decomposition
-
-The $$Z_2$$ slave-spin method following these papers @de2005orbital and @de2017modeling enlarges the Hilbert
-space by representing each physical fermion as a product of an auxiliary fermion
-$$f_{im\sigma}$$ and a slave-spin operator $$O_{im\sigma}$$,
-
-$$
-d_{im\sigma} \rightarrow f_{im\sigma}\, O_{im\sigma}, \qquad
-d^{\dagger}_{im\sigma} \rightarrow O^{\dagger}_{im\sigma} f^{\dagger}_{im\sigma},
-$$
-
-with $$O_{im\sigma} = S^-_{im\sigma} + c_{im\sigma} S^+_{im\sigma}$$, where
-$$S^{\alpha}_{im\sigma}$$ are Pauli operators and the gauge parameter $$c_{im\sigma}$$
-is fixed by the local occupancy. The physical subspace is recovered by enforcing
-
-$$
-f^{\dagger}_{im\sigma} f_{im\sigma} = S^z_{im\sigma} + \tfrac{1}{2},
-$$
-
-via site-dependent Lagrange multipliers $$\lambda_{im\sigma}$$. Under this mapping,
-all density–density interactions reduce to products of $S^z$ operators, and the
-Hamiltonian separates into two coupled sectors: a free-fermion part renormalized
-by slave spin expectation values, and a local interacting spin problem. Next, we aim to decouple the fermions from the spins that's why we apply a mean field decoupling between the two sectors that yields a self consistent equations: The fermionic sector reduces to a renormalized tight-binding problem, from which
-the quasiparticle weight
-
-$$
-Z_{m\sigma} = \langle O_{im\sigma} \rangle^2
-$$
-
-is extracted. The slave spin sector reduces to a single-site Ising-like
-Hamiltonian solved exactly at each iteration. Self-consistency is achieved when
-the constarint condition satisfied.
-To access symmetry-broken phases beyond the paramagnetic solution, we follow the
-variational extension of @crispino2023slave. Here additional parameters appear like $$\lambda_{im\sigma}^0$$ which is zero when we are in the paramgnetic regime and we introduce the notion of the sublattices and we impose symmetry breaking with imposing that sublattice A is spin up and sublattice B is spin down and so we have additional indix for the sublattice for the parameters.
-
-The self-consistent loop mentioned earlier is the computational core of `pySSMF`. The package
-iterates the fermionic and slave spin sectors for arbitrary orbital number,
-filling, and lattice geometry, returning converged quasiparticle weights and
-renormalized band structures. Dedicated routines handle antiferromagnetic
-order parameters, enabling the magnetic phase boundaries discussed in the
-results section.
+Planned near-term extensions include support for tight-binding models derived from real materials, so that the same workflow can be applied beyond model Hamiltonians.# 
 
 
-# Figures
-
-...
 # AI usage disclosure
 
 AI tools, including Codex, were used in a limited way to support brainstorming of software design ideas. 

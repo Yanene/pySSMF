@@ -177,3 +177,4 @@ pytest-coverage.txt
 artifacts
 # and tmp files
 tmp/
+.DS_Store

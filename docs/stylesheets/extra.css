@@ -1,0 +1,12 @@
+/* Show footnote citations as [1] instead of superscript 1 */
+.md-typeset sup[id^="fnref"] {
+  vertical-align: baseline;
+  font-size: inherit;
+  top: 0;
+}
+.md-typeset sup[id^="fnref"] a.footnote-ref {
+  font-size: inherit;
+  vertical-align: baseline;
+}
+.md-typeset sup[id^="fnref"] a.footnote-ref::before { content: "["; }
+.md-typeset sup[id^="fnref"] a.footnote-ref::after  { content: "]"; }
